@@ -1,3 +1,9 @@
+#Create your views here
+#request --> response
+#request handler
+#action
+
+
 from django.views import generic
 from django.urls import reverse_lazy
 from .models import NewsStory
@@ -25,4 +31,14 @@ class AddStoryView(generic.CreateView):
     form_class = StoryForm
     context_object_name = 'storyForm'
     template_name = 'news/createStory.html'
+    #use the name we called the parth in urlpattern to get the url path
     success_url = reverse_lazy('news:index')
+    
+    #overriding form_valid which is on generic.CreateView
+    def form_valid(self, form):
+        #set author to user logged in
+        form.instance.author = self.request.user
+        return super().form_valid(form)
+
+
+

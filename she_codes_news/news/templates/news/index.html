@@ -3,30 +3,34 @@
 
 {% block stylesheets %}
 <link rel="stylesheet" type="text/css" href="{% static 'news/styles.css' %}">
-<a href="{% url 'news:newStory' %}">Write New Story</a>
 
 {% endblock %}
 
 {% block content %}
-
+<button type="submit" onclick=location.href="{% url 'news:newStory' %}">Write New Story</button>
     <h2>Latest News</h2>
 
     <div id="latest-stories">
         {% if latest_stories %}
             {% for story in latest_stories %}
                 {% include "./storyCard.html" with story=story position=forloop.counter %}
-                <p>{{ story.title }}</p>
+                <p>
+
+                </p>
             {% endfor %}
         {% else %}
             <p>No stories are available.</p>
         {% endif %}
     </div>
+   
 
     <div id="all-stories">
         {% if latest_stories %}
             {% for story in all_stories %}
-                {% include "./storyCard.html" with story=story %}
-                <p>{{ story.title }}</p>
+                {% include "./storyCard.html" with story=story position=forloop.counter %}
+                <p>
+
+                </p>
             {% endfor %}
         {% else %}
             <p>No stories are available.</p>
