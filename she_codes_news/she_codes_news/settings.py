@@ -11,9 +11,15 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
+import dj_database_url
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+## print environment
+## print(os.environ)
+# print(os.environ.get('DJANGO_DEBUG'))
+
 
 LOGIN_REDIRECT_URL = 'news:index'
 LOGOUT_REDIRECT_URL = 'news:index'
@@ -22,12 +28,18 @@ LOGOUT_REDIRECT_URL = 'news:index'
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '(jkv!qs0&8mc=ftuod-kzmdni25#vl+s!i@f!yk0*@tuvm16x+'
+SECRET_KEY = os.environ.get(
+    'DJANGO_SECRET_KEY',
+    '5*15pt5log&-bjpkqo0117!b!x4do-mgmxvg8n$3016384zz(7'
+)
+
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# don't show debug to the the public
+DEBUG = os.environ.get('DJANGO_DEBUG') != 'False'
 
-ALLOWED_HOSTS = []
+# allowed all host
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -50,6 +62,7 @@ LOGOUT_REDIRECT_URL= 'news:index'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -89,6 +102,8 @@ DATABASES = {
     }
 }
 
+db_from_env = dj_database_url.config(conn_max_age=500)
+DATABASES['default'].update(db_from_env)
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
@@ -132,5 +147,8 @@ STATICFILES_DIRS = (
 )
 
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
+
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 
